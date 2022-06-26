@@ -1,4 +1,4 @@
-# facial-hotspot2
+# facial-hotspot
 
 ## Project setup
 ```
