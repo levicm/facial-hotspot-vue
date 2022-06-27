@@ -48,7 +48,7 @@
 </template>
 
 <script>
-const BACKEND_ADDRESS = 'http://localhost:8000';
+const BACKEND_ADDRESS = 'https://facial-hotspot-api.herokuapp.com/';
 
 import PhotoCamera from './components/PhotoCamera.vue';
 import { mask } from 'vue-the-mask'
