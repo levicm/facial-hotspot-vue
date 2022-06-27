@@ -11,7 +11,7 @@
     </div>
 
     <div v-show="showLoginPanel || showRegisterPanel">
-      <md-card md-with-hover>
+      <md-card>
         <md-card-header>
           <h3 v-if="showLoginPanel">Autenticação facial</h3>
           <h3 v-if="showRegisterPanel">Cadastro de novo usuário</h3>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+// const BACKEND_ADDRESS = 'http://localhost:8000';
 // const BACKEND_ADDRESS = 'http://192.168.1.65:8000';
 const BACKEND_ADDRESS = 'https://facial-hotspot-api.herokuapp.com';
 
@@ -114,10 +115,9 @@ export default {
       console.log('confirmLogin');
       const data = { user_id: 0, name: '', photo: $event }
       console.log(data);
-      alert('API: ' + BACKEND_ADDRESS + '/authenticate');
+      console.log('API: ' + BACKEND_ADDRESS + '/authenticate');
       let promise = this.$http.post(BACKEND_ADDRESS + '/authenticate', data);
       promise.then(res => {
-        alert(res);
         console.log('response.status: ' + res.status);
         if (res.status == 200) {
           res.json().then(result => {
