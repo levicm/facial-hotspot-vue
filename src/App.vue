@@ -3,11 +3,11 @@
     <img src="./assets/logoEM.png" width="200">
     <h2>{{ msg }}</h2>
     <div v-show="!showLoginPanel && !showRegisterPanel">
-      <p>Já é cadastrado na nossa rede? Entre apenas com o reconhecimento facial:</p>
+      <p>Já é cadastrado na rede? Entre com o reconhecimento facial:</p>
       <md-button type="button" class="md-raised md-primary" @click="login">Quero entrar</md-button>
 
-      <p>Ainda não é cadastrado na nossa rede? Faça um cadastro rapidinho:</p>
-      <md-button type="button" class="md-raised md-primary" @click="register">Quero me cadastrar</md-button>
+      <p>Ainda não é cadastrado? Faça um novo cadastro:</p>
+      <md-button type="button" class="md-raised" @click="register">Quero me cadastrar</md-button>
     </div>
 
     <div v-show="showLoginPanel || showRegisterPanel">
@@ -19,7 +19,7 @@
 
         <md-card-content>
           <form>
-            <md-field v-if="showRegisterPanel">
+            <md-field v-if="enableCpf && showRegisterPanel">
               <label>Entre com seu CPF</label>
               <md-input id="cpfInput" v-show="showRegisterPanel" v-model="cpf" placeholder="CPF" required
                 v-mask="'###.###.###-##'" />
@@ -30,7 +30,7 @@
               <md-input id="nameInput" v-show="showRegisterPanel" v-model="name" placeholder="Nome" required />
               <span class="md-error">Campo requerido*</span>
             </md-field>
-            <md-field v-if="showRegisterPanel">
+            <md-field v-if="enableEmail && showRegisterPanel">
               <label>Entre com seu E-MAIL</label>
               <md-input id="nameInput" v-show="showRegisterPanel" v-model="email" placeholder="E-Mail" type="email"
                 required />
@@ -43,13 +43,6 @@
 
       <md-dialog-alert :md-active.sync="showDialog" :md-title="dialogTitle" :md-content="dialogMessage" />
 
-      <!--md-dialog :md-active.sync="showDialog">
-        <md-dialog-title>Mensagem</md-dialog-title>
-        <p>{{ message }}</p>
-        <md-dialog-actions>
-          <md-button class="md-primary" @click="showDialog = false">Fechar</md-button>
-        </md-dialog-actions>
-      </md-dialog-->
     </div>
   </div>
 </template>
@@ -79,6 +72,9 @@ export default {
 
       dialogTitle: '',
       dialogMessage: '',
+
+      enableCpf: false,
+      enableEmail: false,
 
       cpf: '',
       name: '',
@@ -114,6 +110,7 @@ export default {
     },
 
     confirmLogin($event) {
+      console.log('confirmLogin');
       const data = { user_id: 0, name: '', photo: $event }
       console.log(data);
       let promise = this.$http.post(BACKEND_ADDRESS + '/authenticate', data);
@@ -123,7 +120,7 @@ export default {
           res.json().then(result => {
             console.log('result(JSON)' + result);
             if (result.result == 'ok') {
-              this.openDialog("Bem-vindo, " + result.user.name + '!');
+              this.openDialog("Bem-vindo(a), " + result.user.name + '!');
               this.showLoginPanel = false;
             } else {
               this.openDialog(result.message, 'Erro na autenticação!');
@@ -144,14 +141,19 @@ export default {
     },
 
     confirmRegister($event) {
-      console.log(validar(this.cpf));
-      // if (!validar(this.cpf)) {
-      //   this.message = "CPF inválido!";
-      //   this.showDialog = true;
-      //   document.getElementById("cpfInput").focus();
-      //   return;
-      // }
-      const data = { id: this.cpf.replaceAll('.', '').replace('-', ''), name: this.name, email: this.email, photo: $event };
+      console.log('confirmRegister');
+      let data = { name: this.name, photo: $event };
+      console.log(data);
+      if (this.enableCpf) {
+        if(!validar(this.cpf)) {
+          this.openDialog("CPF inválido!");
+          return;
+        }
+        data.id = this.cpf.replaceAll('.', '').replace('-', '');
+      }
+      if (this.enableEmail) {
+        data.email = this.email;
+      }
       console.log(data);
       let promise = this.$http.post(BACKEND_ADDRESS + '/users', data);
       promise.then(res => res.json())
