@@ -14,7 +14,7 @@
       <md-card md-with-hover>
         <md-card-header>
           <h3 v-if="showLoginPanel">Autenticação facial</h3>
-          <h3 v-if="showRegisterPanel">Registro de novo usuário</h3>
+          <h3 v-if="showRegisterPanel">Cadastro de novo usuário</h3>
         </md-card-header>
 
         <md-card-content>
