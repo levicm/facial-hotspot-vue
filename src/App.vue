@@ -48,7 +48,8 @@
 </template>
 
 <script>
-const BACKEND_ADDRESS = 'https://facial-hotspot-api.herokuapp.com/';
+// const BACKEND_ADDRESS = 'http://192.168.1.65:8000';
+const BACKEND_ADDRESS = 'https://facial-hotspot-api.herokuapp.com';
 
 import PhotoCamera from './components/PhotoCamera.vue';
 import { mask } from 'vue-the-mask'
@@ -113,9 +114,11 @@ export default {
       console.log('confirmLogin');
       const data = { user_id: 0, name: '', photo: $event }
       console.log(data);
+      alert('API: ' + BACKEND_ADDRESS + '/authenticate');
       let promise = this.$http.post(BACKEND_ADDRESS + '/authenticate', data);
       promise.then(res => {
-        console.log(res);
+        alert(res);
+        console.log('response.status: ' + res.status);
         if (res.status == 200) {
           res.json().then(result => {
             console.log('result(JSON)' + result);
