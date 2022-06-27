@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logoEM.png" width="200">
+    <img src="./assets/logoEC.png" width="200">
     <h2>{{ msg }}</h2>
     <div v-show="!showLoginPanel && !showRegisterPanel">
       <p>Já é cadastrado na rede? Entre com o reconhecimento facial:</p>
@@ -137,7 +137,7 @@ export default {
         if (data.status == 404) {
           this.openDialog('Se ainda não é cadastrado, faça o cadastro.', 'Usuário não encontrado!');
         } else {
-          this.openDialog(data.statusText, 'Erro!');
+          this.openDialog(data.statusText, 'Falha geral: ' + data.status);
         }
         this.showLoginPanel = false;
       });
@@ -169,7 +169,7 @@ export default {
             this.openDialog(result.message, "Erro no cadastro!");
           }
         }).catch(data => {
-          this.openDialog(data.statusText, "Erro no cadastro: " + data.status);
+          this.openDialog(data.statusText, "Falha geral no cadastro: " + data.status);
         });
     },
 
